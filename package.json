@@ -1,0 +1,21 @@
+{
+  "name": "dbf",
+  "version": "1.0.1",
+  "description": "discord bot",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "discord.js": "*",
+    "dotenv": "^8.1.0",
+    "express": "*",
+    "fs": "*",
+    "glob": "^7.1.4",
+    "node-opus": "*"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "license": "MIT"
+}
