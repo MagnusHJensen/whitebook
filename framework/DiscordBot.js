@@ -1,12 +1,8 @@
 const discord = require("discord.js");
-const glob = require("glob");
-const path = require("path");
 const shlex = require('./custom_edits/shlex');
-const Command = require('./core/Command');
-const Listener = require('./core/Listener');
 
 class DiscordBot {
-    #client=null;
+    client=null;
     #debug=null;
     #commands = {};
     #listeners = {};
@@ -23,23 +19,33 @@ class DiscordBot {
         this.#voice = startup_settings.voice;
         this.#debug = process.env.DEBUG;
         this.#webserver = process.env.WEBSERVER;
-        this.#client = new discord.Client();
+        this.client = new discord.Client({
+            presence: {
+                status: 'online',
+                activity: {
+                    type: 'PLAYING',
+                    name: 'V 0.0.1-b'
+                }
+            }
+        });
 
         if (this.#debug) {
             this._on_connected();
         }
         this._on_message();
         try{
-            this.#client.login(this.#token);
+            this.client.login(this.#token);
         } catch (e) {
             console.error(e.message);
         }
-        this.#client.on('custom.reload', () => {
+        this.client.on('custom.reload', () => {
             this._generate_commands();
             this._generate_listeners();
         });
 
-        this.#client.emit('custom.reload');
+        this.client.emit('custom.reload');
+
+        //setInterval(this._unban_users, 10000, this.client);
     }
 
     _generate_commands() {
@@ -55,7 +61,7 @@ class DiscordBot {
                     if (!(t instanceof Command)) {
                         return false;
                     }
-                    t.client = this.#client;
+                    t.client = this.client;
                     return t;
                 } catch (e) {
                     return false;
@@ -80,7 +86,7 @@ class DiscordBot {
                     if (!(t instanceof Listener)) {
                         return false;
                     }
-                    t.client = this.#client;
+                    t.client = this.client;
                     return t;
                 } catch (e) {
                     return false;
@@ -98,7 +104,7 @@ class DiscordBot {
             if (event_name === 'all') continue;
             listening_events += `${event_name}(${listeners.length} registered actions),`;
             listeners.forEach(listener => {
-                this.#client.on(event_name, (...params) => {
+                this.client.on(event_name, (...params) => {
                     listener.execute(...params);
                 });
             });
@@ -110,13 +116,13 @@ class DiscordBot {
     }
 
     _on_connected() {
-        this.#client.on('ready', () => {
-            console.log(`Succesfully logged in as ${this.#client.user.tag}`)
+        this.client.on('ready', () => {
+            console.log(`Succesfully logged in as ${this.client.user.tag}`)
         });
     }
 
     _on_message() {
-        this.#client.on('message', async (message) => {
+        this.client.on('message', async (message) => {
             if (message.author.bot || !message.content.startsWith(this.#prefix)) return;
             const args = shlex.split(message.content.slice(this.#prefix.length).trim());
             const command = args.shift().toLowerCase();
@@ -143,4 +149,20 @@ class DiscordBot {
             await found_command.execute(message, message.author, ...args);
         });
     }
+
+    async _unban_users(client) {
+        const banned_users = await User.get_all_banned_users();
+
+        for (const banned_user of Object.values(banned_users)) {
+            if (banned_user.unban_time < new Date().getTime()) {
+                const user = await User.get_user_profile_From_id(banned_user.user_id);
+                const guild = await client.guilds.fetch(banned_user.guild_id);
+                console.log(user.discord_id);
+                await guild.members.unban(user.discord_id, "Time is up.");
+                User.remove_ban(banned_user.id);
+            }
+        }
+    }
 }
+
+module.exports = DiscordBot;

@@ -7,11 +7,12 @@
     "start": "node bot.js"
   },
   "dependencies": {
-    "discord.js": "*",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.1.0",
     "express": "*",
     "fs": "*",
     "glob": "^7.1.4",
+    "mysql": "^2.18.1",
     "node-opus": "*"
   },
   "engines": {
