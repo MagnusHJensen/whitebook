@@ -53,13 +53,15 @@ ws.onmessage = async (msg) => {
     const msgData = JSON.parse(msg.data);
 
     if (msgData.op == 10) {
-        const guild = await bot.guilds.fetch("701462685895884840");
-        const channel = await guild.channels.resolve("810074015229411349");
-        const mcEmbed = new MessageEmbed()
-            .setColor("55FF55")
-            .setTitle("Chat")
-            .setDescription(`**${msgData.data.username}**\n\n${msgData.data.content}`);
-        channel.send(mcEmbed);
+        const guild = await bot.guilds.fetch("715626418893095012");
+        const channel = await guild.channels.resolve("810175506774884362");
+        
+        channel.send(`:minecraft: >> **${msgData.username}** | ${msgData.message}`);
+    }
+
+    if (msgData.op == 4) {
+        console.log(msgData);
+        global.ws.send('{"op": 4, "side": "DC"}');
     }
    
     

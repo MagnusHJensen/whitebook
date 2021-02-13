@@ -3,7 +3,7 @@ class AddProfile extends Command {
         super();
         this.name = "addprofile";
         this.allowed_channels = [];
-        this.allowed_permissions = ['BAN_MEMBERS'];
+        this.allowed_permissions = ['ADMINISTRATOR'];
         this.aliases = ['ap'];
     }
 

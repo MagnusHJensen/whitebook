@@ -15,6 +15,11 @@ class ChatListener extends Listener {
             const username = message.author.username;
             const content = message.content;
 
+            const channel = message.channel;
+            message.delete();
+
+            channel.send(`:discord: >> **${username}** | ${content}`);
+
             const chatObject = {
                 "op": 9,
                 "side": "DC",
