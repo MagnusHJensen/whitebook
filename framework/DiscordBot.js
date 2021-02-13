@@ -45,6 +45,8 @@ class DiscordBot {
 
         this.client.emit('custom.reload');
 
+        return this.client;
+
         //setInterval(this._unban_users, 10000, this.client);
     }
 

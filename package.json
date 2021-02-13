@@ -13,7 +13,8 @@
     "fs": "*",
     "glob": "^7.1.4",
     "mysql": "^2.18.1",
-    "node-opus": "*"
+    "node-opus": "*",
+    "ws": "^7.4.3"
   },
   "engines": {
     "node": "12.x"
