@@ -7,18 +7,16 @@ class ChatListener extends Listener {
     }
 
     execute(message) {
-        if (message.author.bot) {
-            return;
-        }
-        if (message.channel.id == 810074015229411349) {
-
+        
+        if (message.channel.id == 810175506774884362 && !message.author.bot) {
+            console.log("hello");
             const username = message.author.username;
             const content = message.content;
 
             const channel = message.channel;
             message.delete();
 
-            channel.send(`:discord: >> **${username}** | ${content}`);
+            channel.send(`<:discord:810181135002239026> >> **${username}** | ${content}`);
 
             const chatObject = {
                 "op": 9,

@@ -6,7 +6,7 @@ global.Listener = require('./framework/core/Listener');
 global.database = require('./util/DB');
 global.Util = require('./util/Util');
 WebSocket = require('ws');
-global.ws = new WebSocket("ws://212.10.87.252:3000");
+global.ws = new WebSocket("ws://websocket.swequestrian.com:3000");
 
 
 const base_classes = glob.sync('./base_classes/**/*.js').map(file => {
@@ -55,12 +55,11 @@ ws.onmessage = async (msg) => {
     if (msgData.op == 10) {
         const guild = await bot.guilds.fetch("715626418893095012");
         const channel = await guild.channels.resolve("810175506774884362");
-        
-        channel.send(`:minecraft: >> **${msgData.username}** | ${msgData.message}`);
+
+        channel.send(`<:minecraft:810177537233387540> >> **${msgData.data.username}** | ${msgData.data.message}`);
     }
 
     if (msgData.op == 4) {
-        console.log(msgData);
         global.ws.send('{"op": 4, "side": "DC"}');
     }
    
